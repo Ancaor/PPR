@@ -11,9 +11,9 @@
 //#include <helper_functions.h>
 //#include <helper_cuda.h>
 
-#define blocksize 64
+#define blocksize 1024
 
-#define blocksize2D 8
+#define blocksize2D 32
 
 #define blocksizeReduction 256
 
@@ -106,6 +106,10 @@ int main (int argc, char *argv[]) {
   cudaGetDeviceProperties(&props, devID);
   printf("Device %d: \"%s\" with Compute %d.%d capability\n", devID, props.name, props.major, props.minor);
 
+
+  cout << "Blocksize 1D : " << blocksize << " , Blocksize 2D: " << blocksize2D << endl <<endl ;
+
+
 	Graph G;
 	G.lee(argv[1]);// Read the Graph
 
@@ -166,7 +170,7 @@ int main (int argc, char *argv[]) {
 	cudaDeviceSynchronize();
 	double Tgpu = cpuSecond()-t1;
 
-	cout << "Tiempo gastado GPU 1D = " << Tgpu << endl << endl;
+	cout << "Tiempo gastado GPU 1D = " << Tgpu << endl;
 
 
 
@@ -262,7 +266,7 @@ int main (int argc, char *argv[]) {
 		}
 
 	cout << endl << "Camino máximo GPU: " <<max_gpu<< endl;
-	cout << endl << "Camino máximo CPU: " <<max_cpu<< endl;
+	cout << "Camino máximo CPU: " <<max_cpu<< endl;
 
 
 }
