@@ -1,7 +1,7 @@
 #Makefile
 
 OBJ = transformacion
-SRC = transformacion.cc
+SRC = transformacion.cu
 
 # CUDA code generation flags
 ifneq ($(OS_ARCH),armv7l)
@@ -15,7 +15,7 @@ GENCODE_SMXX    := #-gencode arch=compute_50,code=compute_50
 GENCODE_FLAGS   ?= $(GENCODE_SM30) $(GENCODE_SM32) $(GENCODE_SM35) $(GENCODE_SM50) $(GENCODE_SMXX)
 
 $(OBJ):$(SRC)
-	g++ -I./includes  -O3     $(SRC) -o $(OBJ)
+	nvcc -I./includes  -O3 -m64   $(GENCODE_FLAGS)  $(SRC) -o $(OBJ)
 
 
 clean: 
