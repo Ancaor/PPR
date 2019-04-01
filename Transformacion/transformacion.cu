@@ -332,10 +332,13 @@ double tcpu = cpuSecond()-t1;
 
 
 //Imprimir datos por pantalla
-
+cout << endl;
 cout << "Tiempo de cpu : " << tcpu << endl;
 cout << "Tiempo de gpu (memoria global) : " << tgpu_global << endl;
 cout << "Tiempo de gpu (memoria compartida) : " << tgpu_shared << endl << endl;
+
+cout << "Ganancia de gpu (memoria global) : " << tcpu / tgpu_global << endl;
+cout << "Ganancia de gpu (memoria compartida) : " << tcpu / tgpu_shared << endl<<endl<<endl;
 
 
 cout << "Valor máximo de C (cpu) : " << mx << endl;
