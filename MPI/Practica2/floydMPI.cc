@@ -8,9 +8,7 @@
 #include <cmath>
 
 using namespace std;
- 
-#define TAMA 12
- 
+  
 int main(int argc, char** argv) {
  
     int rank, size, nverts;
@@ -36,9 +34,10 @@ int main(int argc, char** argv) {
 
     MPI_Bcast(&nverts, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-    int dim = sqrt(size);
-    int subFilCol = nverts/dim; // tamaño de submatriz
-    int bsize = subFilCol * subFilCol;
+    
+    const int subFilCol = nverts/sqrt(size); // tamaño de submatriz
+    const int bsize = subFilCol * subFilCol;
+    const int dim = sqrt(size);
 
     // creo un comunicador vertical y otro horizontal
 
@@ -69,9 +68,9 @@ int main(int argc, char** argv) {
         for(int i=0, pos = 0; i < size; i++){
             int filaP = i/dim; // fila del proceso i
             int columnaP = i%dim; // columna del proceso i
-            int posComienzo = (columnaP * subFilCol) + (filaP * bsize * dim);
+            int posComienzo = columnaP * subFilCol + filaP * bsize * dim;
 
-            MPI_Pack(I+posComienzo,1,MPI_BLOQUE,matrizRecepcion,sizeof(int)*nverts*nverts,&pos,MPI_COMM_WORLD);
+            MPI_Pack(I + posComienzo,1,MPI_BLOQUE,matrizRecepcion,sizeof(int)*nverts*nverts,&pos,MPI_COMM_WORLD);
 
         }
     }
@@ -100,8 +99,8 @@ int main(int argc, char** argv) {
         idProcesoK = k/subFilCol;
 
         //compruebo si la fila y columna k estan en nuestra submatriz
-        bool tiene_fila_k = (k >= i_global) && (k < i_global + subFilCol);
-        bool tiene_columna_k = (k >= j_global) && (k < j_global + subFilCol);
+        bool tiene_fila_k    = k >= i_global && k < i_global + subFilCol;
+        bool tiene_columna_k = k >= j_global && k < j_global + subFilCol;
 
         if(tiene_fila_k)
             memcpy(fila_k, &submatriz[k%subFilCol][0],sizeof(int)*subFilCol);
@@ -116,6 +115,7 @@ int main(int argc, char** argv) {
         MPI_Bcast(fila_k,subFilCol,MPI_INT, idProcesoK,COMM_HORIZONTAL);
         MPI_Bcast(columna_k,subFilCol,MPI_INT, idProcesoK,COMM_VERTICAL);
 
+        i_global = (rank/dim)*subFilCol;
 
         for(int i = 0; i < subFilCol; i++, i_global++){
             int j_global = (rank%dim)*subFilCol;
@@ -147,13 +147,24 @@ int main(int argc, char** argv) {
             for(int i=0, pos = 0; i < size; i++){
                 int filaP = i/dim; // fila del proceso i
                 int columnaP = i%dim; // columna del proceso i
-                int posComienzo = (columnaP * subFilCol) + (filaP * bsize * dim);
+                int posComienzo = columnaP * subFilCol + filaP * bsize * dim;
 
                 MPI_Unpack(matrizRecepcion,sizeof(int)*nverts*nverts,&pos,matriz_resultado+posComienzo,1,MPI_BLOQUE,MPI_COMM_WORLD);
             }
 
             //Libero el tipo de dato bloque
             MPI_Type_free(&MPI_BLOQUE);
+
+             cout << endl<<"EL Grafo con las distancias de los caminos más cortos es:\n";
+            for(int i=0;i<nverts;i++){
+                cout << "A["<<i << ",*]= ";
+                for(int j=0;j<nverts;j++){
+                if (matriz_resultado[i*nverts+j]==INF) cout << "INF";
+                else cout << matriz_resultado[i*nverts+j];
+                if (j<nverts-1) cout << ",";
+                else cout << endl;
+                }
+            }
 
             delete matriz_resultado;
 

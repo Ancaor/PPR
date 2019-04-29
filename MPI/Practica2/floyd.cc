@@ -38,7 +38,7 @@ for(int k=0;k<nverts;k++)
  double t2=clock();  
  t2=(t2-t1)/CLOCKS_PER_SEC;
  cout << endl<<"EL Grafo con las distancias de los caminos más cortos es:"<<endl<<endl;
- //G.imprime();
+ G.imprime();
  cout<< "Tiempo gastado= "<<t2<<endl<<endl;
 
 }

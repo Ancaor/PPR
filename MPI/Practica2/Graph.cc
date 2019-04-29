@@ -82,11 +82,12 @@ if (!infile)
 	 j=atoi(vertname2);
          A[i*vertices+j]=weight;
 	 }
+}
    //***********************************************************************
 
   int* Graph::getMatriz()
   {
     return A;
   }
-}
+
 
