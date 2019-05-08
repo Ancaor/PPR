@@ -1,23 +1,23 @@
 
 CC = g++ 
 MPICC = mpicxx
-NAME = floyd
-NAME_MPI = floydMPI
+NAME = ./bin/floyd
+NAME_MPI = ./bin/floydMPI
 CFLAGS = -O3
 
-MODULES = floyd.o Graph.o
-MODULES_MPI = floydMPI.o Graph.o
+MODULES = ./obj/floyd.o ./obj/Graph.o
+MODULES_MPI = ./obj/floydMPI.o ./obj/Graph.o
 
-all 		:	floyd floydMPI
-Graph.o		:       Graph.cc Graph.h
-	$(CC) $(CFLAGS) -c Graph.cc
-floyd.o   :	floyd.cc
-	$(CC) $(CFLAGS) -c floyd.cc
-floydMPI.o	: floydMPI.cc
-	$(MPICC) -c floydMPI.cc
-floydMPI :		$(MODULES_MPI)
+all 		:	./bin/floyd ./bin/floydMPI
+./obj/Graph.o		:       ./src/Graph.cc ./include/Graph.h
+	$(CC) $(CFLAGS) -c ./src/Graph.cc -o ./obj/Graph.o
+./obj/floyd.o   :	./src/floyd.cc
+	$(CC) $(CFLAGS) -c ./src/floyd.cc -o ./obj/floyd.o 
+./obj/floydMPI.o	: ./src/floydMPI.cc
+	$(MPICC) -c ./src/floydMPI.cc -o ./obj/floydMPI.o
+./bin/floydMPI :		$(MODULES_MPI)
 	$(MPICC) $(MODULES_MPI) -o $(NAME_MPI) 
-floyd :		$(MODULES)
+./bin/floyd :		$(MODULES)
 	$(CC) $(CFLAGS) $(MODULES) -o $(NAME) $(EXTRALIBS)
 clean	:
 	rm -f $(MODULES)  $(NAME)  $(NAME_MPI)  $(MODULES_MPI)

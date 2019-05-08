@@ -1,0 +1,15 @@
+Secuencial:
+Secuencial - Input: ./input/input60,  Tiempo secuencial: 0.00092
+Secuencial - Input: ./input/input240,  Tiempo secuencial: 0.060059
+Secuencial - Input: ./input/input750,  Tiempo secuencial: 1.8046
+Secuencial - Input: ./input/input1200,  Tiempo secuencial: 7.18398
+MPI para 4 procesadores:
+MPI-2D - Input: ./input/input60,  Tiempo MPI-2D: 0.000770092
+MPI-2D - Input: ./input/input240,  Tiempo MPI-2D: 0.019747
+MPI-2D - Input: ./input/input750,  Tiempo MPI-2D: 0.589564
+MPI-2D - Input: ./input/input1200,  Tiempo MPI-2D: 2.2645
+MPI para 9 procesadores:
+MPI-2D - Input: ./input/input60,  Tiempo MPI-2D: 0.000613213
+MPI-2D - Input: ./input/input240,  Tiempo MPI-2D: 0.0149889
+MPI-2D - Input: ./input/input750,  Tiempo MPI-2D: 0.422881
+MPI-2D - Input: ./input/input1200,  Tiempo MPI-2D: 1.66758

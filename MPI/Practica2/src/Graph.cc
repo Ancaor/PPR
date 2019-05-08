@@ -1,5 +1,5 @@
 //***********************************************************************
-#include "Graph.h"
+#include "../include/Graph.h"
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>

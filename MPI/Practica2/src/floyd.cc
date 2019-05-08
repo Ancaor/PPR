@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string.h>
 #include <time.h>
-#include "Graph.h"
+#include "../include/Graph.h"
 #
 
 using namespace std;
@@ -37,9 +37,9 @@ for(int k=0;k<nverts;k++)
 	}
  double t2=clock();  
  t2=(t2-t1)/CLOCKS_PER_SEC;
- cout << endl<<"EL Grafo con las distancias de los caminos más cortos es:"<<endl<<endl;
- G.imprime();
- cout<< "Tiempo gastado= "<<t2<<endl<<endl;
+// cout << endl<<"EL Grafo con las distancias de los caminos más cortos es:"<<endl<<endl;
+ //G.imprime();
+ cout <<"Secuencial - Input: "<< argv[1] <<",  Tiempo secuencial: " << t2<< endl;
 
 }
 

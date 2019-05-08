@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string.h>
 #include <time.h>
-#include "Graph.h"
+#include "../include/Graph.h"
 #include "mpi.h"
 #include <cstdlib>
 #include <cmath>
@@ -163,8 +163,9 @@ int main (int argc, char *argv[])
 
     MPI_Type_free (&MPI_BLOQUE);
 
-    cout << "Tiempo MPI-2D: " << t2 << endl << endl;
+    cout <<"MPI-2D - Input: "<< argv[1] <<",  Tiempo MPI-2D: " << t2 << endl;
 
+/*
     cout << endl<<"EL Grafo con las distancias de los caminos más cortos es:\n";
     for(i=0;i<nverts;i++){
         cout << "A["<<i << ",*]= ";
@@ -175,7 +176,7 @@ int main (int argc, char *argv[])
         else cout << endl;
         }
     }
-
+*/
     delete matrizResultado;
     }
 
