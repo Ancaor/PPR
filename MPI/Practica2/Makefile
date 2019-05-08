@@ -15,6 +15,8 @@ floyd.o   :	floyd.cc
 	$(CC) $(CFLAGS) -c floyd.cc
 floydMPI.o	: floydMPI.cc
 	$(MPICC) -c floydMPI.cc
+floydMPI :		$(MODULES_MPI)
+	$(MPICC) $(MODULES_MPI) -o $(NAME_MPI) 
 floyd :		$(MODULES)
 	$(CC) $(CFLAGS) $(MODULES) -o $(NAME) $(EXTRALIBS)
 clean	:
