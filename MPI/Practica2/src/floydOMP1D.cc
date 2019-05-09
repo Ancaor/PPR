@@ -37,10 +37,10 @@ double  t1=omp_get_wtime();
 	for(int k=0;k<nverts;k++){
 
 		for(j = 0; j < nverts; j++){
-			filaK[j] = G.arista(k,j);  // obtengo la fila K-esima necesaria
+			filaK[j] = G.arista(k,j);  // obtengo la fila K-esima necesaria antes de la paralelizacion para mejorar rendimiento
 		}
 
-		#pragma omp for schedule(static)
+		#pragma omp for schedule(static)  // For paralelo 
 		for(int i=0;i<nverts;i++)
 			for(int j=0;j<nverts;j++)	 
 				if (i!=j && i!=k && j!=k)    

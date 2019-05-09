@@ -9,7 +9,7 @@ MODULES = ./obj/floyd.o ./obj/Graph.o
 MODULES_MPI = ./obj/floydMPI.o ./obj/Graph.o
 MODULES_OMP = ./obj/floydOMP1D.o ./obj/Graph.o
 
-all 		:	./bin/floyd ./bin/floydMPI ./bin/floydOMP1D
+all 		:	./bin/floyd ./bin/floydMPI ./bin/floydOMP1D ./bin/floydOMP2D
 
 ./obj/Graph.o		:       ./src/Graph.cc ./include/Graph.h
 	$(CC) $(CFLAGS) -c ./src/Graph.cc -o ./obj/Graph.o
@@ -23,11 +23,17 @@ all 		:	./bin/floyd ./bin/floydMPI ./bin/floydOMP1D
 ./obj/floydOMP1D.o	:	./src/floydOMP1D.cc
 	$(CC) $(CFLAGS) -c ./src/floydOMP1D.cc -o ./obj/floydOMP1D.o -fopenmp
 
+./obj/floydOMP2D.o	:	./src/floydOMP2D.cc
+	$(CC) $(CFLAGS) -c ./src/floydOMP2D.cc -o ./obj/floydOMP2D.o -fopenmp
+
 ./bin/floydMPI :		$(MODULES_MPI)
 	$(MPICC) $(MODULES_MPI) -o $(NAME_MPI) 
 
 ./bin/floydOMP1D :		$(MODULES_OMP)
 	$(CC) $(CFLAGS) $(MODULES_OMP) -o ./bin/floydOMP1D -fopenmp
+
+./bin/floydOMP2D :		$(MODULES_OMP)
+	$(CC) $(CFLAGS) $(MODULES_OMP) -o ./bin/floydOMP2D -fopenmp
 
 ./bin/floyd :		$(MODULES)
 	$(CC) $(CFLAGS) $(MODULES) -o $(NAME) $(EXTRALIBS)

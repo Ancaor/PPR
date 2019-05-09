@@ -1,25 +1,35 @@
 Secuencial:
-Secuencial - Input: ./input/input60,  Tiempo secuencial: 0.00095
-Secuencial - Input: ./input/input240,  Tiempo secuencial: 0.056563
-Secuencial - Input: ./input/input750,  Tiempo secuencial: 1.64606
-Secuencial - Input: ./input/input1200,  Tiempo secuencial: 6.85142
+Secuencial - Input: ./input/input60,  Tiempo secuencial: 0.005147
+Secuencial - Input: ./input/input240,  Tiempo secuencial: 0.07932
+Secuencial - Input: ./input/input750,  Tiempo secuencial: 1.76103
+Secuencial - Input: ./input/input1200,  Tiempo secuencial: 7.24225
 MPI para 4 procesadores:
-MPI-2D - Input: ./input/input60,  Tiempo MPI-2D: 0.00307894
-MPI-2D - Input: ./input/input240,  Tiempo MPI-2D: 0.0218799
-MPI-2D - Input: ./input/input750,  Tiempo MPI-2D: 0.582054
-MPI-2D - Input: ./input/input1200,  Tiempo MPI-2D: 2.15363
+MPI-2D - Input: ./input/input60,  Tiempo MPI-2D: 0.00607896
+MPI-2D - Input: ./input/input240,  Tiempo MPI-2D: 0.0418181
+MPI-2D - Input: ./input/input750,  Tiempo MPI-2D: 0.594092
+MPI-2D - Input: ./input/input1200,  Tiempo MPI-2D: 2.26503
 MPI para 9 procesadores:
-MPI-2D - Input: ./input/input60,  Tiempo MPI-2D: 0.001508
-MPI-2D - Input: ./input/input240,  Tiempo MPI-2D: 0.016151
-MPI-2D - Input: ./input/input750,  Tiempo MPI-2D: 0.417932
-MPI-2D - Input: ./input/input1200,  Tiempo MPI-2D: 1.69036
-OMP para 4 threads:
-OMP 1D - Input: ./input/input60,  Tiempo OMP 1D: 0.000259696
-OMP 1D - Input: ./input/input240,  Tiempo OMP 1D: 0.0114168
-OMP 1D - Input: ./input/input750,  Tiempo OMP 1D: 0.360008
-OMP 1D - Input: ./input/input1200,  Tiempo OMP 1D: 1.3831
-OMP para 9 threads:
-OMP 1D - Input: ./input/input60,  Tiempo OMP 1D: 0.000269926
-OMP 1D - Input: ./input/input240,  Tiempo OMP 1D: 0.00991854
-OMP 1D - Input: ./input/input750,  Tiempo OMP 1D: 0.26565
-OMP 1D - Input: ./input/input1200,  Tiempo OMP 1D: 1.08812
+MPI-2D - Input: ./input/input60,  Tiempo MPI-2D: 0.00196505
+MPI-2D - Input: ./input/input240,  Tiempo MPI-2D: 0.0385702
+MPI-2D - Input: ./input/input750,  Tiempo MPI-2D: 0.421325
+MPI-2D - Input: ./input/input1200,  Tiempo MPI-2D: 1.70063
+OMP1D para 4 threads:
+OMP 1D - Input: ./input/input60,  Tiempo OMP 1D: 0.00028035
+OMP 1D - Input: ./input/input240,  Tiempo OMP 1D: 0.0120188
+OMP 1D - Input: ./input/input750,  Tiempo OMP 1D: 0.357525
+OMP 1D - Input: ./input/input1200,  Tiempo OMP 1D: 1.54349
+OMP1D para 9 threads:
+OMP 1D - Input: ./input/input60,  Tiempo OMP 1D: 0.000338836
+OMP 1D - Input: ./input/input240,  Tiempo OMP 1D: 0.00992748
+OMP 1D - Input: ./input/input750,  Tiempo OMP 1D: 0.268255
+OMP 1D - Input: ./input/input1200,  Tiempo OMP 1D: 1.08909
+OMP2D para 4 threads:
+OMP 1D - Input: ./input/input60,  Tiempo OMP 1D: 0.000270962
+OMP 1D - Input: ./input/input240,  Tiempo OMP 1D: 0.0119134
+OMP 1D - Input: ./input/input750,  Tiempo OMP 1D: 0.35732
+OMP 1D - Input: ./input/input1200,  Tiempo OMP 1D: 1.45061
+OMP2D para 9 threads:
+OMP 1D - Input: ./input/input60,  Tiempo OMP 1D: 0.00027104
+OMP 1D - Input: ./input/input240,  Tiempo OMP 1D: 0.0102135
+OMP 1D - Input: ./input/input750,  Tiempo OMP 1D: 0.265958
+OMP 1D - Input: ./input/input1200,  Tiempo OMP 1D: 1.08976
