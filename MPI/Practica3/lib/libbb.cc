@@ -3,6 +3,7 @@
 /* ************************************************************************ */
 
 #include <cstdio>
+#include <iostream>
 #include <cstdlib>
 #include <mpi.h>
 #include "libbb.h"
@@ -25,18 +26,18 @@ const int NEGRO = 1;
 
 
 // Comunicadores que usar� cada proceso
-Intracomm comunicadorCarga;	// Para la distribuci�n de la carga
-Intracomm comunicadorCota;	// Para la difusi�n de una nueva cota superior detectada
+extern MPI_Comm comunicadorCarga;	// Para la distribuci�n de la carga
+extern MPI_Comm comunicadorCota;	// Para la difusi�n de una nueva cota superior detectada
 
 // Variables que indican el estado de cada proceso
-extern int rank;	 // Identificador del proceso dentro de cada comunicador (coincide en ambos)
-extern int size;	// N�mero de procesos que est�n resolviendo el problema
+extern int _rank;	 // Identificador del proceso dentro de cada comunicador (coincide en ambos)
+extern int _size;	// N�mero de procesos que est�n resolviendo el problema
 int estado;	// Estado del proceso {ACTIVO, PASIVO}
 int color;	// Color del proceso {BLANCO,NEGRO}
 int color_token; 	// Color del token la �ltima vez que estaba en poder del proceso
-bool token_presente;  // Indica si el proceso posee el token
-int anterior;	// Identificador del anterior proceso
-int siguiente;	// Identificador del siguiente proceso
+extern bool token_presente;  // Indica si el proceso posee el token
+extern int anterior;	// Identificador del anterior proceso
+extern int siguiente;	// Identificador del siguiente proceso
 bool difundir_cs_local;	// Indica si el proceso puede difundir su cota inferior local
 bool pendiente_retorno_cs;	// Indica si el proceso est� esperando a recibir la cota inferior de otro proceso
 
@@ -388,16 +389,19 @@ void EquilibrarCarga(tPila & pila, bool & fin, tNodo & sol) {
   // Si la pila esta vacia solicita trabajo
   if(pila.vacia()){
 
+   // std::cout << "El proceso "<< _rank << " tiene la pila vacia"<<std::endl;
+
     //Pide trabajo al siguiente proceso
-    MPI_Send(&rank,1, MPI_INT, siguiente,PETICION,comunicadorCarga);
+    MPI_Send(&_rank,1, MPI_INT, siguiente,PETICION,comunicadorCarga);
 
     //Mientras cola vacia y no fin
-    while (pila.vacia && !fin)
+    while (pila.vacia() && !fin)
     {
       //Espera mensaje de otro proceso
       MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, comunicadorCarga, &status);
       MPI_Get_count(&status, MPI_INT, &count);
       tag = status.MPI_TAG;
+     // std::cout << _rank <<"  tag del primer if " << tag << std::endl;
 
       switch (tag)
       {
@@ -409,16 +413,18 @@ void EquilibrarCarga(tPila & pila, bool & fin, tNodo & sol) {
         break;
 
       case PETICION: // Recibe peticion de trabajo
-        MPI_Recv(&solicitante, 1, MPI_INT, siguiente, PETICION, comunicadorCarga, &status);
+       // std::cout<< "Recive sincrono" << std::endl;
+        MPI_Recv(&solicitante, 1, MPI_INT, anterior, PETICION, comunicadorCarga, &status);
+        //std::cout<< "sale de Recive sincrono" << std::endl;
 
         // Reenvio peticion de trabajo al siguiente proceso
         MPI_Send(&solicitante, 1, MPI_INT, siguiente, PETICION, comunicadorCarga);
 
-        if(solicitante == rank) { // Vuelve la peticion al proceso que la inició
+        if(solicitante == _rank) { // Vuelve la peticion al proceso que la inició
           estado = PASIVO;
 
           if(token_presente){
-            if(rank == 0) color_token = BLANCO;
+            if(_rank == 0) color_token = BLANCO;
             else color_token = color;
 
             //Comienza a circular el token de deteccion de fin
@@ -436,7 +442,7 @@ void EquilibrarCarga(tPila & pila, bool & fin, tNodo & sol) {
         // si el proceso no tiene trabajo
         if(estado == PASIVO){
           // Si el token vuelve al proceso 0 y permanece blanco se ha llegado al fin
-          if(rank == 0 && color == BLANCO && color_token == BLANCO){
+          if(_rank == 0 && color == BLANCO && color_token == BLANCO){
             fin = true;
             // Enviamos el mensaje de fin al siguiente proceso
             MPI_Send(sol.datos, 2*NCIUDADES, MPI_INT, siguiente, FIN, comunicadorCarga);
@@ -446,7 +452,7 @@ void EquilibrarCarga(tPila & pila, bool & fin, tNodo & sol) {
             if(solTemporal.esMejor(sol)) CopiaNodo(&solTemporal, &sol);
           }
           else {
-            if(rank == 0) color_token = BLANCO;
+            if(_rank == 0) color_token = BLANCO;
             else color_token = color;
 
             MPI_Send(NULL, 0, MPI_INT, anterior, TOKEN, comunicadorCarga);
@@ -472,12 +478,14 @@ void EquilibrarCarga(tPila & pila, bool & fin, tNodo & sol) {
     // Mira si hay mensajes pendientes de otros procesos
     MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, comunicadorCarga, &flag, &status);
 
+    
+
     while (flag > 0) //Mientras haya mensajes
     {
       MPI_Get_count(&status, MPI_INT, &count);
       source = status.MPI_SOURCE;
       tag = status.MPI_TAG;
-
+    //  std::cout << _rank <<"  tag del segundo if " << tag << std::endl;
       switch (tag)
       {
       case PETICION: // Recibe peticion de trabajo
@@ -491,7 +499,7 @@ void EquilibrarCarga(tPila & pila, bool & fin, tNodo & sol) {
 
               // Si el indice del que pide es menor que el del solicitante, el token se vuelve negro,
               // es decir, algún nodo se ha reactivado.
-              if (rank < solicitante) color = NEGRO;
+              if (_rank < solicitante) color = NEGRO;
           } else { // si no tengo nodos para dar
             // Reenviar petición de trabajo al siguiente proceso
             MPI_Send(&solicitante, 1, MPI_INT, siguiente, PETICION, comunicadorCarga);
@@ -505,6 +513,15 @@ void EquilibrarCarga(tPila & pila, bool & fin, tNodo & sol) {
           break;
 
 
+        case NODOS: // Recibe nodos de otro proceso
+       // std::cout<< "Entra en NODOS segundo if" << std::endl;
+        source = status.MPI_SOURCE;
+        MPI_Recv(pila.nodos, count, MPI_INT, source, NODOS, comunicadorCarga, &status);
+        pila.tope = count;
+        estado = ACTIVO;
+        break;
+
+
       }
       // Sondear si hay mensajes pendientes de otros procesos
       MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, comunicadorCarga, &flag, &status );
@@ -514,8 +531,53 @@ void EquilibrarCarga(tPila & pila, bool & fin, tNodo & sol) {
 }
 
 
-void DifusionCotaSuperior(int & cotaSuperior, bool & nuevaCotaSuperior) {
+void DifusionCotaSuperior(int & cotaSuperior, bool & hayNuevaCotaSuperior) {
+  difundir_cs_local = hayNuevaCotaSuperior;
+  pendiente_retorno_cs = false;
+  MPI_Status status;
+  int flag, nueva_cs, tag;
 
+  if (difundir_cs_local && !pendiente_retorno_cs) {
+    // Enviamos nuestra cota superior al siguiente proceso (es decir, en anillo)
+    MPI_Send(&cotaSuperior, 1, MPI_INT, siguiente, _rank, comunicadorCota);
+    pendiente_retorno_cs = true;
+    difundir_cs_local = false;
+  }
+
+  // Sondear si hay mensajes de cota superior pendientes
+  MPI_Iprobe(anterior, MPI_ANY_TAG, comunicadorCota, &flag, &status);
+  tag = status.MPI_TAG;
+
+  while ( flag > 0 ){ // mientras haya mensajes
+    // recibimos mensaje de cota del proceso anterior
+
+    MPI_Recv(&nueva_cs, 1, MPI_INT, anterior, tag, comunicadorCota, &status);
+
+    // Si la nueva cota superior es mejor, la actualizamos
+    if (nueva_cs < cotaSuperior){
+      cotaSuperior = nueva_cs;
+      hayNuevaCotaSuperior = true;
+    }
+
+    if (tag == _rank){ // origen del mensaje == mismo proceso
+
+      if (difundir_cs_local){
+        // Enviamos la nueva cota superior al siguiente proceso
+        MPI_Send(&cotaSuperior, 1, MPI_INT, siguiente, _rank, comunicadorCota);
+        pendiente_retorno_cs = true;
+        difundir_cs_local = false;
+      }
+      else pendiente_retorno_cs = false;
+
+    }
+    else { // origen del mensaje == otro proceso
+      // Reenviamos la cota superior recibida al siguiente proceso
+      MPI_Send(&cotaSuperior, 1, MPI_INT, siguiente, tag, comunicadorCota);
+    }
+
+    MPI_Iprobe(anterior, MPI_ANY_TAG, comunicadorCota, &flag, &status );
+    tag = status.MPI_TAG;
+}
 }
 
 

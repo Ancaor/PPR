@@ -10,7 +10,12 @@
 using namespace std;
 
 unsigned int NCIUDADES;
-int rank, size;
+int _rank, _size,siguiente, anterior;
+bool token_presente;
+
+MPI_Comm comunicadorCarga;	// Para la distribución de la carga
+MPI_Comm comunicadorCota;	// Para la difusión de una nueva cota superior detectada
+
 
 main (int argc, char **argv) {
         MPI::Init(argc,argv);
