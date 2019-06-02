@@ -7,7 +7,9 @@
 #include <cstdlib>
 #include <mpi.h>
 #include "libbb.h"
-using namespace MPI;
+
+using namespace std;
+
 extern unsigned int NCIUDADES;
 
 // Tipos de mensajes que se env�an los procesos

@@ -147,7 +147,7 @@ main (int argc, char **argv) {
 
 	liberarMatriz(tsp0);
 
-  MPI::Finalize();
+  MPI_Finalize();
 
   exit(0);
 }

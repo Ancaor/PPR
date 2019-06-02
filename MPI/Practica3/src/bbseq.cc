@@ -18,7 +18,7 @@ MPI_Comm comunicadorCota;	// Para la difusión de una nueva cota superior detect
 
 
 main (int argc, char **argv) {
-        MPI::Init(argc,argv);
+        MPI_Init(&argc,&argv);
 	switch (argc) {
 		case 3:		NCIUDADES = atoi(argv[1]);
 					break;
@@ -43,7 +43,7 @@ main (int argc, char **argv) {
 
 	LeerMatriz (argv[2], tsp0);    // lee matriz de fichero
 	activo = !Inconsistente(tsp0);
-        double t=MPI::Wtime();
+        double t=MPI_Wtime();
 	while (activo) {       // ciclo del Branch&Bound
 		Ramifica (&nodo, &lnodo, &rnodo, tsp0);		
 		nueva_U = false;
@@ -83,8 +83,8 @@ main (int argc, char **argv) {
 		activo = pila.pop(nodo);
 		iteraciones++;
 	}
-        t=MPI::Wtime()-t;
-        MPI::Finalize();
+        t=MPI_Wtime()-t;
+        MPI_Finalize();
 	printf ("Solucion: \n");
 	EscribeNodo(&solucion);
         cout<< "Tiempo gastado= "<<t<<endl;
