@@ -499,7 +499,7 @@ void EquilibrarCarga(tPila & pila, bool & fin, tNodo & sol) {
             MPI_Send(pila_enviar.nodos, pila_enviar.tope,
               MPI_INT, solicitante, NODOS, comunicadorCarga);
 
-              // Si el indice del que pide es menor que el del solicitante, el token se vuelve negro,
+              // Si el indice del que da es menor que el del solicitante, el token se vuelve negro,
               // es decir, algún nodo se ha reactivado.
               if (_rank < solicitante) color = NEGRO;
           } else { // si no tengo nodos para dar
@@ -539,7 +539,7 @@ void DifusionCotaSuperior(int & cotaSuperior, bool & hayNuevaCotaSuperior) {
   MPI_Status status;
   int flag, nueva_cs, tag;
 
-  if (difundir_cs_local && !pendiente_retorno_cs) {
+  if (difundir_cs_local && !pendiente_retorno_cs) {  // si hay una nueva cota superior y la cota anterior ya ha dado la vuelta al anillo
     // Enviamos nuestra cota superior al siguiente proceso (es decir, en anillo)
     MPI_Send(&cotaSuperior, 1, MPI_INT, siguiente, _rank, comunicadorCota);
     pendiente_retorno_cs = true;
