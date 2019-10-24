@@ -448,8 +448,14 @@ void EquilibrarCarga(tPila & pila, bool & fin, tNodo & sol) {
             fin = true;
             // Enviamos el mensaje de fin al siguiente proceso
             MPI_Send(sol.datos, 2*NCIUDADES, MPI_INT, siguiente, FIN, comunicadorCarga);
+
+          //  MPI_Recv(solTemporal.datos, 2*NCIUDADES, MPI_INT, anterior, MPI_ANY_TAG, comunicadorCarga, &status);
+            while(status.MPI_TAG != FIN){
+              MPI_Recv(solTemporal.datos, 2*NCIUDADES, MPI_INT, anterior, MPI_ANY_TAG, comunicadorCarga, &status);
+            }
+
             // Esperamos hasta que todos hayan recibido mensaje de fin
-            MPI_Recv(solTemporal.datos, 2*NCIUDADES, MPI_INT, anterior, FIN, comunicadorCarga, &status);
+            //MPI_Recv(solTemporal.datos, 2*NCIUDADES, MPI_INT, anterior, FIN, comunicadorCarga, &status);
             // Comparamos soluciones, el proceso 0 se queda con la mejor solucion
             if(solTemporal.esMejor(sol)) CopiaNodo(&solTemporal, &sol);
           }
@@ -513,7 +519,6 @@ void EquilibrarCarga(tPila & pila, bool & fin, tNodo & sol) {
           MPI_Recv(NULL, 0, MPI_INT, source, TOKEN, comunicadorCarga, &status);
           token_presente = true;
           break;
-
 
         case NODOS: // Recibe nodos de otro proceso
        // std::cout<< "Entra en NODOS segundo if" << std::endl;
@@ -579,7 +584,7 @@ void DifusionCotaSuperior(int & cotaSuperior, bool & hayNuevaCotaSuperior) {
 
     MPI_Iprobe(anterior, MPI_ANY_TAG, comunicadorCota, &flag, &status );
     tag = status.MPI_TAG;
-}
+  }
 }
 
 
